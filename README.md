@@ -8,7 +8,7 @@ It will make object from raw json, so it will be easier for you to use it.
 ## Instalation
 
 ```
-# from github.com/
+# from github
 git clone https://github.com/wiered/tabstatspy.git
 cd tabstatspy
 pip install .
@@ -22,7 +22,7 @@ import tabstats
 query = "Some username"
 
 with tabstats.Client() as client:
-    search-results = client.search(query)
+    search_results = client.search(query)
     user = client.get_player(search-results[0].get("name"))
 ```
 
