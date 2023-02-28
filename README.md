@@ -28,4 +28,4 @@ with tabstats.Client() as client:
 
 The result will contain User object. If parser will unable to find player, it will be empty User object.
 
-## [API References](docs/api.md)
+## [API References](docs/API.md)
