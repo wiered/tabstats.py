@@ -22,26 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         typed variable
 """  
 
-def get_siege_id(_json) -> str:
-    if isinstance(_json.get("id"), str):
-        return _json["id"]
-    return ""
-
-def get_d_id(_json) -> int:
-    if _json.get("d_id"):
-        return int(_json["d_id"])
-    return 0
-
-def get_rank_from_json(_json) -> str:
-    if _json.get("rank"):
-        return _json["rank"]
-    return "Unranked"
-
-def get_name_from_json(_json) -> str:
-    if _json.get("name"):
-        return _json["name"]
-    return ""
-
 def parse_str(key) -> str:
     if not key:
         return "N/A"

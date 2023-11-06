@@ -7,8 +7,8 @@ It will make object from raw json, so it will be easier for you to use it.
 
 ## Instalation
 
+### from github
 ```
-# from github
 git clone https://github.com/wiered/tabstatspy.git
 cd tabstatspy
 pip install .
@@ -19,11 +19,11 @@ pip install .
 ```python
 import tabstats
 
-query = "Some username"
+query = "username"
 
 with tabstats.Client() as client:
     search_results = client.search(query)
-    user = client.get_player(search-results[0].get("name"))
+    user = client.get_player(search_results[0].get("name"))
 ```
 
 The result will contain User object. If parser will unable to find player, it will be empty User object.

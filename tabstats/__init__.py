@@ -17,7 +17,7 @@ import copy
 import requests
 from ._user import User
 
-__VERSION__ = '0.1.0'
+__VERSION__ = '0.1.1'
 
 SEARCH_API = "https://r6.apitab.net/website/search"
 PROFILE_API = "https://r6.apitab.net/website/profiles/{}"
@@ -31,6 +31,7 @@ DEFAULT_SEARCH_JSON = {
 class Client():
     def __init__(self):
         self.session = requests.Session()
+        
     
     def get_player(self, player_id: str) -> User:
         """_summary_ : Parse overall player data from player id
@@ -112,9 +113,8 @@ class Client():
 
 
     def __enter__(self):
-        print('enter method called')
         return self
      
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        print('exit method called')
+        self.session.close()

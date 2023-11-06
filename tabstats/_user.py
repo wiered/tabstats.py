@@ -14,8 +14,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from datetime import datetime, date
-from ._type_helpers import (get_siege_id, get_d_id, get_rank_from_json, 
-                            get_name_from_json, parse_str, parse_int, parse_float, parse_bool)
+from ._type_helpers import parse_str, parse_int, parse_float, parse_bool
 
 API_URL = "https://r6.apitab.net/website/profiles/{}"
 AVATAR_URL = "https://ubisoft-avatars.akamaized.net/{}/default_146_146.png"
