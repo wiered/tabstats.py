@@ -13,15 +13,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import copy
 import requests
 from ._user import User
 
-__VERSION__ = '0.1.1'
+__VERSION__ = '0.1.2'
 
 SEARCH_API = "https://r6.apitab.net/website/search"
 PROFILE_API = "https://r6.apitab.net/website/profiles/{}"
-DEFAULT_SEARCH_JSON = {
+DEFAULT_USER_CARD = {
             "name": "N/A",
             "id": "N/A",
             "level": "N/A",
@@ -34,7 +33,7 @@ class Client():
         
     
     def get_player(self, player_id: str) -> User:
-        """_summary_ : Parse overall player data from player id
+        """_summary_ : Parse overall player data by player id
 
         Args:
             playerid (str): Rainbow Six Siege player id
@@ -43,73 +42,92 @@ class Client():
             User: overall player data
         """
 
-        response = self.session.get(PROFILE_API.format(player_id))
+        response: requests.Response = self.session.get(PROFILE_API.format(player_id))
 
         if response.status_code != 200:
-            return {}
+            return User({})
 
         return User(response.json())
     
 
-    def search(self, query):
+    def search(self, query: str) -> list[dict]:
         """_summary_ : Parse search results from query
         
         Args:
             query (str): Rainbow Six Siege user name
         
         Returns:
-            list: list of search results
+            list: list of search results, if not found anything will return empty list
         """
+
+        if not isinstance(query, str):
+            raise ValueError("query must be a string")
 
         response = self.session.get(SEARCH_API, params={"display_name": query, "platform": "uplay"})
         if response.status_code != 200:
             return []
-        return [self._unpack_json(_json) for _json in response.json()]
-
-
-    def _extract_rank(self, response, _json) -> dict:
-        """_summary_ : extracts rank from json"""
-        rank = None
-        cssr = response.get("current_season_ranked_record")
-        if cssr:
-            rank = cssr.get("rank_slug")[3:]
-            
-        if rank:
-            _json.update({"rank": rank})
-            
-        return _json
-
-
-    def _extract_profile(self, _json: dict, response: dict) -> dict:
-        """_summary_ : extracts profile from json"""
-        profile = response.get("profile")
-        if profile:
-            _json.update({"name": profile.get("display_name")})
-            _json.update({"id": profile.get("user_id")})
-            _json.update({"level": profile.get("level")})
         
-        return _json
+        search_engine_resultant = self._get_search_engine_resultant(response)
+        return search_engine_resultant
 
 
-    def _unpack_json(self, response, full=False) -> dict:
-        """Unpack json from api to dict
+    def _extract_rank_from_resultant(self, resultant: dict) -> int:
+        """extracts rank from resultant"""
+
+        rank = None
+        rank_record = resultant.get("current_season_ranked_record")
+        if not rank_record:
+            return "Unranked"
+
+        rank = rank_record.get("rank_slug")[3:]
+        if not rank:
+            return "Unranked"
+        
+        del rank_record
+        return rank
+        
+
+    def _extract_user_card_from_resultant(self, resultant: dict) -> dict:
+        """extracts user's card from resultant"""
+
+        profile: dict = resultant.get("profile")
+        if not profile:
+            raise ValueError("Wrong resultant was given")
+        
+        rank = self._extract_rank_from_resultant(resultant)
+        name = profile.get("display_name")
+        id = profile.get("user_id")
+        level = profile.get("level")
+        if not name or not id or not level:
+            raise ValueError("Wrong resultant was given")
+
+        user_card: dict = {}
+        user_card.update({"name": name})
+        user_card.update({"id": id})
+        user_card.update({"level": level})
+        user_card.update({"rank": rank})
+
+        del name, id, level, rank, profile
+        return user_card
+    
+
+    def _get_search_engine_resultant(self, response: requests.Response) -> list[dict]:
+        """Unpack search engine resultant from response
 
         Args:
-            response (_type_): raw json from api
-            full (bool, optional): if true, unpacking from full json. Defaults to False.
+            response (requests.Response)
 
         Returns:
-            dict: unpacked json with player data
+            list[dict]: list of users cards
         """
 
-        if not response:
-            return {}
+        search_engine_resultant = []
 
-        _json = copy.copy(DEFAULT_SEARCH_JSON)
-        _json = self._extract_profile(_json, response)
-        _json = self._extract_rank(response, _json)
+        for resultant in response.json():
+            user_card = self._extract_user_card_from_resultant(resultant)
+            search_engine_resultant.append(user_card)
 
-        return _json
+        return search_engine_resultant
 
 
     def __enter__(self):
@@ -118,3 +136,4 @@ class Client():
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.session.close()
+        del self.session

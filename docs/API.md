@@ -24,19 +24,21 @@
 
 ## tabstats.Client.search
 
-```py
+```yaml
 Search user by name
 
+Return you search engine resultant
+
 Args: 
-    query(str): search query
+    query(str): search query # (REQUIRED)
 
 Returns:
-    list[dict]: search results
+    list[dict]: list of results, or empty list if nothing found
 ```
 
-### search result looks like this:
+### Example of search engine resultant list:
 
-```py
+```yaml
 [
     {
         'name': 'Username', 
@@ -49,26 +51,28 @@ Returns:
         'id': 'fake-ubi-id2', 
         'level': 0, 
         'rank': 'N/A'
-    },
+    }
 ]
 ```
 
 ## tabstats.Client.get_player
 
-```py
-Parse player statistics by his ubisoft id
+```yaml
+Parse player data by his ubisoft id
 
 Args:
     player_id(str): ubisoft id of player
 
 Returns:
-    User: overall player data
+    User: returns User object
+        if request was unsuccessful will return default User object
 ```
 
 ## class tabstats.User
 
-```python
+```yaml
 Attributes:
+    is_empty: bool # true if user is empty(bad id, connection errors, etc.), false otherwise
     profile: User.Profile
     name: str
     social_profile: dict
@@ -87,7 +91,7 @@ Attributes:
 
 ## class tabstats.User.Profile
 
-```python
+```yaml
 Attributes:
     display_name: str
     profile_views: int
@@ -108,7 +112,7 @@ Attributes:
 
 ## class tabstats.User.SummaryGraphData
 
-```python
+```yaml
 Attributes:
     ranked: list[User.SummaryGraphData.GraphData]
     casual: list[User.SummaryGraphData.GraphData]
@@ -117,7 +121,7 @@ Attributes:
 
 ## class tabstats.User.SummaryGraphData.GraphData
 
-```python
+```yaml
 Attributes:
     kills: int
     deaths: int
@@ -127,12 +131,11 @@ Attributes:
     lowest_mmr: int
     highest_mmr: int
     mode_slug: str
-    _date
 ```
 
 ## class tabstats.User.GeneralRecords
 
-```python
+```yaml
 Attributes:
     ranked: User.GeneralRecords.Record
     records: dict
@@ -140,7 +143,7 @@ Attributes:
 
 ## class tabstats.User.GeneralRecords.Record
 
-```python
+```yaml
 Attributes:
     mode_slug: str
     kills: int
@@ -156,7 +159,7 @@ Attributes:
 
 ## class tabstats.User.CurrentSeasonRecords
 
-```python
+```yaml
 Attributes:
     ranked: User.CurrentSeasonRecords.Record
     casual: User.CurrentSeasonRecords.Record
@@ -165,29 +168,29 @@ Attributes:
 
 ## class tabstats.User.CurrentSeasonRecords.Record
 
-```python
+```yaml
 Attributes:
-    mode_slug:str
-    season_slug:str
-    region_slug:str
-    rank_slug:str
-    max_rank_slug:str
-    kills:int
-    deaths:int
-    kd:float
-    wins:int
-    losses:int
-    wl:float
-    abandons:int
-    mmr:int 
-    max_mmr:int
-    mmr_change:int
-    champion_position:int
+    mode_slug: str
+    season_slug: str
+    region_slug: str
+    rank_slug: str
+    max_rank_slug: str
+    kills: int
+    deaths: int
+    kd: float
+    wins: int
+    losses: int
+    wl: float
+    abandons: int
+    mmr: int 
+    max_mmr: int
+    mmr_change: int
+    champion_position: int
 ```
 
 ## class tabstats.User.PastSeasonRecords
 
-```python
+```yaml
 Attributes:
     seasons: list[User.PastSeasonRecords.Season]
     keys: list
@@ -195,7 +198,7 @@ Attributes:
 
 ## class tabstats.User.PastSeasonRecords.Season
 
-```python
+```yaml
 Attributes:
     mode_slug: str
     season_slug: str
@@ -217,7 +220,7 @@ Attributes:
 
 ## class tabstats.User.Alias
 
-```python
+```yaml
 Attributes:
     display_name: str
     created_at: datetime.datetime

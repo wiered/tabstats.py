@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 # testing folder
-tests/
 utest.py
+t.py

@@ -22,54 +22,56 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         typed variable
 """  
 
-def parse_str(key) -> str:
-    if not key:
+def parse_str(value) -> str:
+    if not value:
         return "N/A"
     
-    if isinstance(key, str):
-        return key
+    if isinstance(value, str):
+        return value
     
     return "N/A"
 
-def parse_int(key) -> int:
-    if not key:
+def parse_int(value) -> int:
+    if not value:
         return 0
     
-    if isinstance(key, int):
-        return key
+    if isinstance(value, int):
+        return value
     
-    if key[0] == "-":
-        key = key[1:]
+    if value[0] == "-":
+        value = value[1:]
         
-    if key.isnumeric():
-        return int(key)
+    if value.isnumeric():
+        return int(value)
     
     return 0
 
-def parse_float(key) -> float:
-    if not key:
+def parse_float(value) -> float:
+    if not value:
         return 0.0
     
-    if isinstance(key, float) or isinstance(key, int):
-        return key  
+    if isinstance(value, float) or isinstance(value, int):
+        return value  
     
-    _key = key.replace(".", "", 1)
-    if key[0] == "-":
+    _key = value.replace(".", "", 1)
+    if value[0] == "-":
         _key = _key[1:]
         
     if _key.isnumeric():
-        return float(key)
+        return float(value)
     
     return 0.0
 
-def parse_bool(key) -> bool:
-    if not key:
+def parse_bool(value) -> bool:
+    """At all costs, tries to return boolean value, even if not boolean value given"""
+    if not value:
         return False
     
-    if isinstance(key, bool):
-        return key
+    if isinstance(value, bool):
+        return value
     
-    if key == "true":
+    if value == "true":
         return True
-    
+        
     return False
+    

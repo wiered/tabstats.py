@@ -23,6 +23,8 @@ CHAMP_API = "https://img-gen.apitab.com/{}"
 
 class User:
     def __init__(self, _json: dict):
+        self.is_empty = True
+
         self.profile: User.Profile = User.Profile(_json.get('profile'))
         self.name = ""
         self.summary_graph_data: User.SummaryGraphData = User.SummaryGraphData(_json.get('summary_graph_data'))
@@ -42,7 +44,8 @@ class User:
 
         if not _json:
             return
-    
+
+        self.is_empty = False
         self._unpack(_json)
 
     def _unpack(self, _json: dict):
@@ -90,9 +93,9 @@ class User:
             self.updated_at: datetime = datetime.fromisoformat("1970-01-01T00:00:00+00:00")
             self.can_update_at: datetime = datetime.fromisoformat("1970-01-01T00:00:00+00:00")
 
-            if not _json:
-                return
-            self._unpack(_json)
+            if _json:
+                self._unpack(_json)
+
             
         def _unpack(self, _json: dict):    
             self.display_name: str  = parse_str(_json.get("display_name"))
@@ -117,7 +120,7 @@ class User:
     class SummaryGraphData():
         def __init__(self, _json: dict):
             if not _json:
-                User.SummaryGraphData._set_defaults(self)
+                self._set_defaults()
                 return
 
             self.ranked:list[User.SummaryGraphData.GraphData] = User.SummaryGraphData.GraphData.generate(_json.get('ranked'))
@@ -126,9 +129,9 @@ class User:
 
 
         def _set_defaults(self):
-            self.ranked = User.SummaryGraphData.GraphData()
-            self.casual = User.SummaryGraphData.GraphData()
-            self.deathmatch = User.SummaryGraphData.GraphData()
+            self.ranked = User.SummaryGraphData.GraphData({})
+            self.casual = User.SummaryGraphData.GraphData({})
+            self.deathmatch = User.SummaryGraphData.GraphData({})
 
 
         class GraphData():
@@ -141,7 +144,7 @@ class User:
                 self.lowest_mmr: int = 0
                 self.highest_mmr: int = 0
                 self.mode_slug: str = ""
-                self._date = 0
+                self.date = 0
 
                 if not _json:  
                     return
@@ -156,7 +159,7 @@ class User:
                 self.lowest_mmr: int  = parse_int(_json.get("lowest_mmr"))
                 self.highest_mmr: int = parse_int(_json.get("highest_mmr"))
                 self.mode_slug: str   = parse_str(_json.get("mode_slug"))
-                self._date = date.fromisoformat(_json.get("date"))
+                self.date = date.fromisoformat(_json.get("date"))
             
 
             @classmethod
