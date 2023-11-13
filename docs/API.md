@@ -27,7 +27,7 @@
 ```yaml
 Search user by name
 
-Return you search engine resultant
+Returns you search engine resultant
 
 Args: 
     query(str): search query # (REQUIRED)

@@ -23,7 +23,8 @@ query = "username"
 
 with tabstats.Client() as client:
     search_results = client.search(query)
-    user = client.get_player(search_results[0].get("name"))
+    user = client.get_player(search_results[0].get("id"))
+    print(user.name)
 ```
 
 The result will contain User object. If parser will unable to find player, it will be empty User object.
